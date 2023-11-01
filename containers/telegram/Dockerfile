@@ -10,10 +10,10 @@ ARG WORKDIR
 WORKDIR $WORKDIR
 
 RUN apt-get update && \
-    DEBIAN_FRODEBIAN_FRONTEND=noninteractive apt-get install -y wget xz-utils && \
-    wget --content-disposition https://telegram.org/dl/desktop/linux
-RUN ls
-RUN tar xf "$(ls)"
+    DEBIAN_FRODEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates wget \
+    xz-utils && \
+    wget --content-disposition https://telegram.org/dl/desktop/linux && \
+    tar xf "$(ls)"
 
 
 
@@ -24,7 +24,8 @@ ARG WORKDIR
 COPY --from=0 "$WORKDIR/Telegram" /opt/Telegram
 
 RUN apt-get update && \
-    DEBIAN_FRODEBIAN_FRONTEND=noninteractive apt-get install -y libfontconfig1 libglib2.0-0 libgl1 libgtk-3-0 \
-    libx11-xcb1 libx11-6
+    DEBIAN_FRODEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends fonts-wqy-zenhei \
+    libfontconfig1 libglib2.0-0 libgl1 libgtk-3-0 libx11-xcb1 libx11-6 && \
+    apt-get clean
 
 ENTRYPOINT ["/opt/Telegram/Telegram"]
